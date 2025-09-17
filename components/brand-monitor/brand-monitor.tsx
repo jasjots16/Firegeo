@@ -63,6 +63,11 @@ export function BrandMonitor({
     dispatch, 
     onCreditsUpdate,
     onAnalysisComplete: (completedAnalysis) => {
+      console.log('[DEBUG] Analysis completed, checking if should save...');
+      console.log('[DEBUG] selectedAnalysis:', selectedAnalysis);
+      console.log('[DEBUG] hasSavedRef.current:', hasSavedRef.current);
+      console.log('[DEBUG] completedAnalysis:', completedAnalysis);
+      
       // Only save if this is a new analysis (not loaded from existing)
       if (!selectedAnalysis && !hasSavedRef.current) {
         hasSavedRef.current = true;
@@ -77,18 +82,22 @@ export function BrandMonitor({
           creditsUsed: CREDITS_PER_BRAND_ANALYSIS
         };
         
+        console.log('[DEBUG] Saving analysis data:', analysisData);
+        
         saveAnalysis.mutate(analysisData, {
           onSuccess: (savedAnalysis) => {
-            console.log('Analysis saved successfully:', savedAnalysis);
+            console.log('[SUCCESS] Analysis saved successfully:', savedAnalysis);
             if (onSaveAnalysis) {
               onSaveAnalysis(savedAnalysis);
             }
           },
           onError: (error) => {
-            console.error('Failed to save analysis:', error);
+            console.error('[ERROR] Failed to save analysis:', error);
             hasSavedRef.current = false;
           }
         });
+      } else {
+        console.log('[DEBUG] Skipping save - either selectedAnalysis exists or already saved');
       }
     }
   });
@@ -419,6 +428,35 @@ export function BrandMonitor({
     setIsLoadingExistingAnalysis(false);
   }, []);
   
+  // Debug function to manually save analysis
+  const handleManualSave = useCallback(() => {
+    if (!analysis || !company) {
+      console.log('[DEBUG] No analysis or company data to save');
+      return;
+    }
+    
+    const analysisData = {
+      url: company?.url || url,
+      companyName: company?.name,
+      industry: company?.industry,
+      analysisData: analysis,
+      competitors: identifiedCompetitors,
+      prompts: analyzingPrompts,
+      creditsUsed: CREDITS_PER_BRAND_ANALYSIS
+    };
+    
+    console.log('[DEBUG] Manual save triggered with data:', analysisData);
+    
+    saveAnalysis.mutate(analysisData, {
+      onSuccess: (savedAnalysis) => {
+        console.log('[SUCCESS] Manual save successful:', savedAnalysis);
+      },
+      onError: (error) => {
+        console.error('[ERROR] Manual save failed:', error);
+      }
+    });
+  }, [analysis, company, url, identifiedCompetitors, analyzingPrompts, saveAnalysis]);
+  
   const batchScrapeAndValidateCompetitors = useCallback(async (competitors: IdentifiedCompetitor[]) => {
     const validatedCompetitors = competitors.map(comp => ({
       ...comp,
@@ -513,13 +551,29 @@ export function BrandMonitor({
           <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
             <div className="flex gap-6 relative">
             {/* Sidebar Navigation */}
-            <ResultsNavigation
-              activeTab={activeResultsTab}
-              onTabChange={(tab) => {
-                dispatch({ type: 'SET_ACTIVE_RESULTS_TAB', payload: tab });
-              }}
-              onRestart={handleRestart}
-            />
+            <div className="space-y-4">
+              <ResultsNavigation
+                activeTab={activeResultsTab}
+                onTabChange={(tab) => {
+                  dispatch({ type: 'SET_ACTIVE_RESULTS_TAB', payload: tab });
+                }}
+                onRestart={handleRestart}
+              />
+              
+              {/* Debug Save Button - Remove in production */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800 mb-2">Debug Tools:</p>
+                  <button
+                    onClick={handleManualSave}
+                    className="px-3 py-1 bg-yellow-500 text-white rounded text-sm hover:bg-yellow-600"
+                    disabled={saveAnalysis.isPending}
+                  >
+                    {saveAnalysis.isPending ? 'Saving...' : 'Manual Save'}
+                  </button>
+                </div>
+              )}
+            </div>
             
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col">

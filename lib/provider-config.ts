@@ -56,7 +56,7 @@ export interface ProviderConfig {
 export const PROVIDER_ENABLED_CONFIG: Record<string, boolean> = {
   openai: true,      // OpenAI is enabled
   anthropic: true,   // Anthropic is enabled
-  google: false,     // Google is disabled
+  google: true,      // Google is enabled
   perplexity: true,  // Perplexity is enabled
 };
 
@@ -174,17 +174,25 @@ export const PROVIDER_CONFIGS: Record<string, ProviderConfig> = {
     enabled: PROVIDER_ENABLED_CONFIG.google,
     models: [
       {
-        id: 'gemini-2.5-pro',
-        name: 'Gemini 2.5 Pro',
+        id: 'gemini-1.5-pro',
+        name: 'Gemini 1.5 Pro',
         maxTokens: 1000000,
         supportsFunctionCalling: true,
         supportsStructuredOutput: true,
         supportsWebSearch: true,
       },
       {
-        id: 'gemini-1.5-pro',
-        name: 'Gemini 1.5 Pro',
+        id: 'gemini-1.5-flash',
+        name: 'Gemini 1.5 Flash',
         maxTokens: 1000000,
+        supportsFunctionCalling: true,
+        supportsStructuredOutput: true,
+        supportsWebSearch: true,
+      },
+      {
+        id: 'gemini-pro',
+        name: 'Gemini Pro',
+        maxTokens: 30720,
         supportsFunctionCalling: true,
         supportsStructuredOutput: true,
         supportsWebSearch: true,
@@ -198,7 +206,7 @@ export const PROVIDER_CONFIGS: Record<string, ProviderConfig> = {
         supportsWebSearch: true,
       },
     ],
-    defaultModel: 'gemini-2.5-pro',
+    defaultModel: 'gemini-1.5-pro',
     capabilities: {
       webSearch: true, // Native search grounding
       functionCalling: true,
@@ -208,7 +216,22 @@ export const PROVIDER_CONFIGS: Record<string, ProviderConfig> = {
     },
     getModel: (modelId?: string, options?: any) => {
       if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) return null;
-      return google(modelId || PROVIDER_CONFIGS.google.defaultModel, {
+      
+      // Try the requested model first, then fallback to known working models
+      const requestedModel = modelId || PROVIDER_CONFIGS.google.defaultModel;
+      const fallbackModels = ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-pro'];
+      
+      // If requested model is not in fallback list, try it first
+      const modelsToTry = requestedModel && !fallbackModels.includes(requestedModel) 
+        ? [requestedModel, ...fallbackModels]
+        : fallbackModels;
+      
+      // For now, just use the first model (we'll implement retry logic in the calling code)
+      const modelToUse = modelsToTry[0];
+      
+      console.log(`[Google] Using model: ${modelToUse}`);
+      
+      return google(modelToUse, {
         useSearchGrounding: options?.useWebSearch || false,
       });
     },
@@ -256,19 +279,42 @@ export const PROVIDER_CONFIGS: Record<string, ProviderConfig> = {
 };
 
 /**
+ * Provider priority order for fallback sequence
+ * Lower numbers = higher priority (tried first)
+ */
+export const PROVIDER_PRIORITY: Record<string, number> = {
+  google: 1,      // Try Google first
+  openai: 2,      // Then OpenAI
+  anthropic: 3,   // Then Anthropic
+  perplexity: 4,  // Finally Perplexity
+};
+
+/**
  * Get all configured providers (must be both enabled and have API key)
+ * Returns providers sorted by priority (Google first, then OpenAI, etc.)
  */
 export function getConfiguredProviders(): ProviderConfig[] {
-  return Object.values(PROVIDER_CONFIGS).filter(provider => provider.enabled && provider.isConfigured());
+  return Object.values(PROVIDER_CONFIGS)
+    .filter(provider => provider.enabled && provider.isConfigured())
+    .sort((a, b) => {
+      const priorityA = PROVIDER_PRIORITY[a.id] || 999;
+      const priorityB = PROVIDER_PRIORITY[b.id] || 999;
+      return priorityA - priorityB;
+    });
 }
 
 /**
  * Get providers that support a specific capability
+ * Returns providers sorted by priority (Google first, then OpenAI, etc.)
  */
 export function getProvidersWithCapability(capability: keyof ProviderCapabilities): ProviderConfig[] {
-  return Object.values(PROVIDER_CONFIGS).filter(
-    provider => provider.enabled && provider.isConfigured() && provider.capabilities[capability]
-  );
+  return Object.values(PROVIDER_CONFIGS)
+    .filter(provider => provider.enabled && provider.isConfigured() && provider.capabilities[capability])
+    .sort((a, b) => {
+      const priorityA = PROVIDER_PRIORITY[a.id] || 999;
+      const priorityB = PROVIDER_PRIORITY[b.id] || 999;
+      return priorityA - priorityB;
+    });
 }
 
 /**

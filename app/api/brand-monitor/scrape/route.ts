@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       await autumn.track({
         customer_id: sessionResponse.user.id,
         feature_id: FEATURE_ID_MESSAGES,
-        count: 1,
+        count: 0,
       });
     } catch (err) {
       console.error('[Brand Monitor Scrape] Error tracking usage:', err);

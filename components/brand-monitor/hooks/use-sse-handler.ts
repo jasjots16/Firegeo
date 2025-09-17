@@ -245,6 +245,7 @@ export function useSSEHandler({ state, dispatch, onCreditsUpdate, onAnalysisComp
 
       case 'complete':
         const completeData = eventData.data as { analysis: any };
+        console.log('[SSE] Analysis complete event received:', completeData);
         dispatch({
           type: 'ANALYSIS_COMPLETE',
           payload: completeData.analysis
@@ -254,8 +255,11 @@ export function useSSEHandler({ state, dispatch, onCreditsUpdate, onAnalysisComp
           onCreditsUpdate();
         }
         // Call the completion callback
+        console.log('[SSE] Calling onAnalysisComplete callback...');
         if (onAnalysisComplete) {
           onAnalysisComplete(completeData.analysis);
+        } else {
+          console.log('[SSE] No onAnalysisComplete callback provided');
         }
         break;
 

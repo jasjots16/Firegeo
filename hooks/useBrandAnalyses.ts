@@ -40,6 +40,8 @@ export function useSaveBrandAnalysis() {
   
   return useMutation({
     mutationFn: async (analysisData: Partial<BrandAnalysis>) => {
+      console.log('[HOOK] Saving analysis data:', analysisData);
+      
       const res = await fetch('/api/brand-monitor/analyses', {
         method: 'POST',
         headers: {
@@ -48,14 +50,24 @@ export function useSaveBrandAnalysis() {
         body: JSON.stringify(analysisData),
       });
       
+      console.log('[HOOK] Save response status:', res.status);
+      
       if (!res.ok) {
-        throw new Error('Failed to save brand analysis');
+        const errorData = await res.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('[HOOK] Save failed:', errorData);
+        throw new Error(`Failed to save brand analysis: ${errorData.error || res.statusText}`);
       }
       
-      return res.json();
+      const result = await res.json();
+      console.log('[HOOK] Save successful:', result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('[HOOK] Save mutation success, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['brandAnalyses', session?.user?.id] });
+    },
+    onError: (error) => {
+      console.error('[HOOK] Save mutation error:', error);
     },
   });
 }

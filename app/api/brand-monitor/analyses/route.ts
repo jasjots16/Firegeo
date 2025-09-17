@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { brandAnalyses } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { handleApiError, AuthenticationError, ValidationError } from '@/lib/api-errors';
+import { executeWithRetry } from '@/lib/db/utils';
 
 // GET /api/brand-monitor/analyses - Get user's brand analyses
 export async function GET(request: NextRequest) {
@@ -16,9 +17,11 @@ export async function GET(request: NextRequest) {
       throw new AuthenticationError('Please log in to view your analyses');
     }
 
-    const analyses = await db.query.brandAnalyses.findMany({
-      where: eq(brandAnalyses.userId, sessionResponse.user.id),
-      orderBy: desc(brandAnalyses.createdAt),
+    const analyses = await executeWithRetry(async () => {
+      return await db.query.brandAnalyses.findMany({
+        where: eq(brandAnalyses.userId, sessionResponse.user.id),
+        orderBy: desc(brandAnalyses.createdAt),
+      });
     });
 
     return NextResponse.json(analyses);
@@ -47,16 +50,18 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    const [analysis] = await db.insert(brandAnalyses).values({
-      userId: sessionResponse.user.id,
-      url: body.url,
-      companyName: body.companyName,
-      industry: body.industry,
-      analysisData: body.analysisData,
-      competitors: body.competitors,
-      prompts: body.prompts,
-      creditsUsed: body.creditsUsed || 10,
-    }).returning();
+    const [analysis] = await executeWithRetry(async () => {
+      return await db.insert(brandAnalyses).values({
+        userId: sessionResponse.user.id,
+        url: body.url,
+        companyName: body.companyName,
+        industry: body.industry,
+        analysisData: body.analysisData,
+        competitors: body.competitors,
+        prompts: body.prompts,
+        creditsUsed: body.creditsUsed || 10,
+      }).returning();
+    });
 
     return NextResponse.json(analysis);
   } catch (error) {

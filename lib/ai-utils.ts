@@ -350,18 +350,51 @@ When responding to prompts about tools, platforms, or services:
   try {
     // First, get the response
     console.log(`Calling ${provider} with prompt: "${prompt.substring(0, 50)}..."`);
-    const { text } = await generateText({
-      model,
-      system: systemPrompt,
-      prompt,
-      temperature: 0.7,
-      maxTokens: 800,
-    });
-    console.log(`${provider} response length: ${text.length}, first 100 chars: "${text.substring(0, 100)}"`);
+    
+    // Special handling for Google with retry logic
+    let text = '';
+    let attempts = 0;
+    const maxAttempts = normalizedProvider === 'google' ? 3 : 1;
+    
+    while (attempts < maxAttempts && (!text || text.length === 0)) {
+      attempts++;
+      console.log(`${provider} attempt ${attempts}/${maxAttempts}`);
+      
+      try {
+        const result = await generateText({
+          model,
+          system: systemPrompt,
+          prompt,
+          temperature: normalizedProvider === 'google' ? 0.8 : 0.7, // Higher temperature for Google
+          maxTokens: normalizedProvider === 'google' ? 1000 : 800, // More tokens for Google
+        });
+        text = result.text;
+        
+        if (text && text.length > 0) {
+          console.log(`${provider} success on attempt ${attempts}, response length: ${text.length}`);
+          break;
+        } else {
+          console.warn(`${provider} returned empty response on attempt ${attempts}`);
+          if (attempts < maxAttempts) {
+            // Wait before retry
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+          }
+        }
+      } catch (attemptError) {
+        console.error(`${provider} attempt ${attempts} failed:`, attemptError);
+        if (attempts === maxAttempts) {
+          throw attemptError;
+        }
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+      }
+    }
+    
+    console.log(`${provider} final response length: ${text.length}, first 100 chars: "${text.substring(0, 100)}"`);
     
     if (!text || text.length === 0) {
-      console.error(`${provider} returned empty response for prompt: "${prompt}"`);
-      throw new Error(`${provider} returned empty response`);
+      console.error(`${provider} returned empty response after ${attempts} attempts for prompt: "${prompt}"`);
+      throw new Error(`${provider} returned empty response after ${attempts} attempts`);
     }
 
     // Then analyze it with structured output
@@ -603,8 +636,22 @@ Return a simple analysis:
         message: (error as any).message,
         stack: (error as any).stack,
         name: (error as any).name,
-        cause: (error as any).cause
+        cause: (error as any).cause,
+        prompt: prompt.substring(0, 100),
+        modelUsed: normalizedProvider,
+        hasApiKey: !!process.env.GOOGLE_GENERATIVE_AI_API_KEY
       });
+      
+      // If it's an empty response error, try to provide more context
+      if ((error as any).message?.includes('empty response')) {
+        console.error('Google empty response troubleshooting:', {
+          promptLength: prompt.length,
+          promptType: prompt.includes('?') ? 'question' : 'statement',
+          brandName,
+          competitorsCount: competitors.length,
+          suggestion: 'Try using a different model or adjusting the prompt'
+        });
+      }
     }
     
     throw error;
