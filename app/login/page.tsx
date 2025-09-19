@@ -55,8 +55,8 @@ function LoginForm() {
   return (
     <div className="min-h-screen flex">
       {/* Left side - purple gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-800 via-purple-800 to-purple-800 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-800 via-purple-800 to-purple-800" />
+      <div className="hidden lg:flex lg:w-1/2 bg-purple-900 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0  bg-purple-900" />
         <div className="relative z-10 max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Welcome back!</h1>
           <p className="text-lg opacity-90">
@@ -64,8 +64,8 @@ function LoginForm() {
           </p>
         </div>
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-purple-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        {/* <div className="absolute top-20 right-20 w-64 h-64 bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" /> */}
       </div>
 
       {/* Right side - Form */}
@@ -84,9 +84,9 @@ function LoginForm() {
             <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-800">
+            <p className="mt-2 text-center text-sm text-gray-900">
               Or{' '}
-              <Link href="/register" className="font-medium text-purple-800 hover:text-purple-800">
+              <Link href="/register" className="font-medium text-purple-900 hover:text-purple-900">
                 create a new account
               </Link>
             </p>
@@ -133,25 +133,25 @@ function LoginForm() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-purple-800 focus:ring-black border-gray-300 rounded"
+                  className="h-4 w-4 text-purple-900 focus:ring-black border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                   Remember me
                 </label>
               </div>
-              <Link href="/forgot-password" className="text-sm text-purple-800 hover:text-purple-800">
+              <Link href="/forgot-password" className="text-sm text-purple-900 hover:text-purple-900">
                 Forgot your password?
               </Link>
             </div>
 
             {success && (
-              <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+              <div className="bg-green-50 border border-green-200 text-green-900 px-4 py-3 rounded-lg">
                 {success}
               </div>
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-900 px-4 py-3 rounded-lg">
                 {error}
               </div>
             )}

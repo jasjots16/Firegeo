@@ -56,9 +56,9 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Orange gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/90 via-orange-500/90 to-orange-600/90" />
+      {/* Left side - purple gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-purple-900 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-purple-900" />
         <div className="relative z-10 max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Join thousands of developers</h1>
           <p className="text-lg opacity-90">
@@ -86,8 +86,8 @@ export default function RegisterPage() {
           </div>
         </div>
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        {/* <div className="absolute top-20 right-20 w-64 h-64 bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-900 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" /> */}
       </div>
 
       {/* Right side - Form */}
@@ -106,9 +106,9 @@ export default function RegisterPage() {
             <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Create your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-sm text-gray-900">
               Or{' '}
-              <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
+              <Link href="/login" className="font-medium text-purple-900 hover:text-purple-500">
                 sign in to existing account
               </Link>
             </p>
@@ -127,7 +127,7 @@ export default function RegisterPage() {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -143,7 +143,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   placeholder="Enter your email"
                 />
               </div>
@@ -159,7 +159,7 @@ export default function RegisterPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   placeholder="Choose a strong password"
                 />
                 <p className="mt-1 text-xs text-gray-500">Must be at least 8 characters long</p>
@@ -167,8 +167,8 @@ export default function RegisterPage() {
             </div>
 
             {error && (
-              <div className={`border px-4 py-3 rounded-lg ${showExistingAccountOptions ? 'bg-gray-900 border-gray-800' : 'bg-red-50 border-red-200'}`}>
-                <p className={showExistingAccountOptions ? 'text-white font-medium' : 'text-red-600'}>
+              <div className={`border px-4 py-3 rounded-lg ${showExistingAccountOptions ? 'bg-gray-900 border-gray-900' : 'bg-red-50 border-red-200'}`}>
+                <p className={showExistingAccountOptions ? 'text-white font-medium' : 'text-red-900'}>
                   {error}
                 </p>
                 {showExistingAccountOptions && (
@@ -179,13 +179,13 @@ export default function RegisterPage() {
                     <div className="flex flex-col sm:flex-row gap-2">
                       <Link 
                         href={`/login?email=${encodeURIComponent(email)}`}
-                        className="inline-flex items-center justify-center px-4 py-2 border border-orange-500 text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:ring-offset-gray-900 transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 border border-purple-500 text-sm font-medium rounded-md text-white bg-purple-500 hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-gray-900 transition-colors"
                       >
                         Sign in instead
                       </Link>
                       <Link 
                         href="/forgot-password"
-                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-orange-400 hover:text-orange-300 focus:outline-none focus:underline transition-colors"
+                        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-purple-400 hover:text-purple-300 focus:outline-none focus:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -202,15 +202,15 @@ export default function RegisterPage() {
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-purple-900 border-gray-300 rounded"
                 />
                 <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
                   I agree to the{' '}
-                  <Link href="#" className="text-orange-600 hover:text-orange-500">
+                  <Link href="#" className="text-purple-900 hover:text-purple-500">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="#" className="text-orange-600 hover:text-orange-500">
+                  <Link href="#" className="text-purple-900 hover:text-purple-500">
                     Privacy Policy
                   </Link>
                 </label>
@@ -218,7 +218,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-firecrawl-orange w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 h-10 px-4"
+                className="btn-firecrawl-purple w-full inline-flex items-center justify-center whitespace-nowrap rounded-[10px] text-sm font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 h-10 px-4"
               >
                 {loading ? 'Creating account...' : 'Create account'}
               </button>
