@@ -71,7 +71,7 @@ function BrandMonitorContent({ session }: { session: any }) {
               <div className="text-center flex-1">
                 <h1 className="text-4xl lg:text-5xl font-bold tracking-tight mb-2 animate-fade-in-up">
                   <span className="block text-zinc-900">FireGEO Monitor</span>
-                  <span className="block bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
+                  <span className="block bg-purple-900 bg-clip-text text-transparent">
                     AI Brand Visibility Platform
                   </span>
                 </h1>

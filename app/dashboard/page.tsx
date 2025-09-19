@@ -210,7 +210,7 @@ function DashboardContent({ session }: { session: any }) {
               <button
                 onClick={() => handleSettingToggle('emailNotifications', !settings?.emailNotifications)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings?.emailNotifications ? 'bg-orange-500' : 'bg-gray-200'
+                  settings?.emailNotifications ? 'bg-purple-900' : 'bg-gray-200'
                 }`}
                 disabled={updateSettings.isPending}
               >
@@ -230,7 +230,7 @@ function DashboardContent({ session }: { session: any }) {
               <button
                 onClick={() => handleSettingToggle('marketingEmails', !settings?.marketingEmails)}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  settings?.marketingEmails ? 'bg-orange-500' : 'bg-gray-200'
+                  settings?.marketingEmails ? 'bg-purple-900' : 'bg-gray-200'
                 }`}
                 disabled={updateSettings.isPending}
               >
@@ -291,7 +291,7 @@ function DashboardContent({ session }: { session: any }) {
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-orange-500 h-2 rounded-full transition-all"
+                        className="bg-purple-900 h-2 rounded-full transition-all"
                         style={{
                           width: `${Math.min(((feature.usage || 0) / (feature.included_usage || feature.balance + (feature.usage || 0) || 1)) * 100, 100)}%`
                         }}
@@ -335,7 +335,7 @@ function DashboardContent({ session }: { session: any }) {
                             <span className="ml-2 text-sm text-green-600">(Current Plan)</span>
                           )}
                           {isScheduledPlan && (
-                            <span className="ml-2 text-sm text-orange-600">(Scheduled)</span>
+                            <span className="ml-2 text-sm text-purple-900">(Scheduled)</span>
                           )}
                         </h3>
                         {product.display?.description && (

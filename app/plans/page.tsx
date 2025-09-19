@@ -63,7 +63,7 @@ export default function PricingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-[3rem] lg:text-[4.5rem] font-bold tracking-tight mb-6">
-            <span className="bg-gradient-to-tr from-orange-600 to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-purple-900 bg-clip-text text-transparent">
               Simple, transparent pricing
             </span>
           </h1>
