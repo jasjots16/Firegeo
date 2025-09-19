@@ -138,18 +138,18 @@
 }
 
 .btn-firecrawl-orange {
-  background-color: #f97316;
+  background-color: #5919C1;
   color: white;
-  box-shadow: inset 0px -2px 0px 0px #c2410c, 0px 1px 6px 0px rgba(234, 88, 12, 58%);
+  box-shadow: inset 0px -2px 0px 0px #5919C1, 0px 1px 6px 0px rgba(0, 0, 0, 0.58);
 }
 .btn-firecrawl-orange:hover {
-  background-color: #ea580c;
+  background-color: #5919C1;
   transform: translateY(1px) scale(0.98);
-  box-shadow: inset 0px -1px 0px 0px #c2410c, 0px 1px 3px 0px rgba(234, 88, 12, 40%);
+  box-shadow: inset 0px -1px 0px 0px #5919C1, 0px 1px 3px 0px rgba(0, 0, 0, 0.4);
 }
 .btn-firecrawl-orange:active {
   transform: translateY(2px) scale(0.97);
-  box-shadow: inset 0px 1px 1px 0px #c2410c, 0px 1px 2px 0px rgba(234, 88, 12, 30%);
+  box-shadow: inset 0px 1px 1px 0px #5919C1, 0px 1px 2px 0px rgba(234, 88, 12, 30%);
 }
 
 .btn-firecrawl-outline {

@@ -48,7 +48,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <Image
-                src="/firecrawl-logo-with-fire.webp"
+                src="/IMG_6090.jpg"
                 alt="Firecrawl"
                 width={120}
                 height={25}

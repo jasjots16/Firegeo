@@ -54,9 +54,9 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Orange gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 p-12 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/90 via-orange-500/90 to-orange-600/90" />
+      {/* Left side - purple gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-800 via-purple-800 to-purple-800 p-12 items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-800 via-purple-800 to-purple-800" />
         <div className="relative z-10 max-w-md text-white">
           <h1 className="text-4xl font-bold mb-4">Welcome back!</h1>
           <p className="text-lg opacity-90">
@@ -64,8 +64,8 @@ function LoginForm() {
           </p>
         </div>
         {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
-        <div className="absolute bottom-20 left-20 w-64 h-64 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
+        <div className="absolute top-20 right-20 w-64 h-64 bg-purple-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob" />
+        <div className="absolute bottom-20 left-20 w-64 h-64 bg-purple-800 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000" />
       </div>
 
       {/* Right side - Form */}
@@ -84,9 +84,9 @@ function LoginForm() {
             <h2 className="text-center text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-2 text-center text-sm text-gray-800">
               Or{' '}
-              <Link href="/register" className="font-medium text-orange-600 hover:text-orange-500">
+              <Link href="/register" className="font-medium text-purple-800 hover:text-purple-800">
                 create a new account
               </Link>
             </p>
@@ -105,7 +105,7 @@ function LoginForm() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   placeholder="Enter your email"
                 />
               </div>
@@ -121,7 +121,7 @@ function LoginForm() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   placeholder="Enter your password"
                 />
               </div>
@@ -133,25 +133,25 @@ function LoginForm() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-purple-800 focus:ring-black border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                   Remember me
                 </label>
               </div>
-              <Link href="/forgot-password" className="text-sm text-orange-600 hover:text-orange-500">
+              <Link href="/forgot-password" className="text-sm text-purple-800 hover:text-purple-800">
                 Forgot your password?
               </Link>
             </div>
 
             {success && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg">
+              <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                 {success}
               </div>
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
                 {error}
               </div>
             )}

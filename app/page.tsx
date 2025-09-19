@@ -19,8 +19,8 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-8 animate-fade-in-up">
-              <span className="block text-zinc-900">FireGEO Monitor</span>
-              <span className="block bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
+              <span className="block text-zinc-900">Auto Reach</span>
+              <span className="block bg-gradient-to-r from-purple-800 to-black bg-clip-text text-transparent">
                 AI Brand Visibility Platform
               </span>
             </h1>
@@ -121,8 +121,8 @@ export default function Home() {
             </div>
 
             {/* Pro - Featured */}
-            <div className="bg-white p-8 rounded-[20px] border-2 border-orange-500 relative animate-fade-in-up animation-delay-600 hover:scale-105 transition-all duration-200">
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+            <div className="bg-white p-8 rounded-[20px] border-2 border-purple-800 relative animate-fade-in-up animation-delay-600 hover:scale-105 transition-all duration-200">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-purple-800 text-white px-4 py-1 rounded-full text-sm font-medium">
                 Most Popular
               </div>
               <h3 className="text-2xl font-bold mb-2">Pro</h3>
@@ -196,7 +196,7 @@ export default function Home() {
             </div>
 
             <div className="text-center mt-12">
-              <Link href="/plans" className="text-orange-600 hover:text-orange-700 font-medium">
+              <Link href="/plans" className="text-purple-800 hover:text-purple-800 font-medium">
                 View detailed pricing →
               </Link>
             </div>
@@ -208,11 +208,11 @@ export default function Home() {
       {/* CTA Section 1 */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-[30px] p-16 text-center">
+          <div className="bg-gradient-to-r from-purple-800 to-black rounded-[30px] p-16 text-center">
             <h2 className="text-4xl font-bold text-white mb-6">
               See How AI Models Rank Your Brand
             </h2>
-            <p className="text-xl text-orange-100 mb-8">
+            <p className="text-xl text-purple-800 mb-8">
               Monitor your brand visibility across ChatGPT, Claude, Perplexity and more
             </p>
             <Link
