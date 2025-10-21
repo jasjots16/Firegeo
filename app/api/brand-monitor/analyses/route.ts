@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { brandAnalyses } from '@/lib/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, and } from 'drizzle-orm';
+import { getOrCreateJobIdForWorkflow, normalizeUrlForJobKey } from '@/lib/db/job-utils';
 import { handleApiError, AuthenticationError, ValidationError } from '@/lib/api-errors';
 import { executeWithRetry } from '@/lib/db/utils';
 
@@ -50,10 +51,21 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const normalizedUrl = normalizeUrlForJobKey(body.url);
+    // Determine jobId per latest-per-url rule if not provided
+    const resolved = body.jobId ? { jobId: body.jobId, url: normalizedUrl } : await getOrCreateJobIdForWorkflow(normalizedUrl, 'brand_analyses');
+
+    // If a brand analysis already exists for (url, jobId), mint a new jobId
+    const existing = await db.query.brandAnalyses.findFirst({
+      where: and(eq(brandAnalyses.url, normalizedUrl), eq(brandAnalyses.jobId, resolved.jobId))
+    });
+    const jobIdToUse = existing ? (await getOrCreateJobIdForWorkflow(normalizedUrl, 'brand_analyses')).jobId : resolved.jobId;
+
     const [analysis] = await executeWithRetry(async () => {
       return await db.insert(brandAnalyses).values({
         userId: sessionResponse.user.id,
-        url: body.url,
+        url: normalizedUrl,
+        jobId: jobIdToUse,
         companyName: body.companyName,
         industry: body.industry,
         analysisData: body.analysisData,

@@ -11,6 +11,7 @@ import {
   ExternalServiceError 
 } from '@/lib/api-errors';
 import { FEATURE_ID_MESSAGES } from '@/config/constants';
+import { getOrCreateJobIdForWorkflow, normalizeUrlForJobKey } from '@/lib/db/job-utils';
 
 const autumn = new Autumn({
   apiKey: process.env.AUTUMN_SECRET_KEY!,
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
       throw new ExternalServiceError('Unable to verify credits. Please try again', 'autumn');
     }
 
-    const { url, maxAge } = await request.json();
+    const { url, maxAge, jobId: incomingJobId } = await request.json();
 
     if (!url) {
       throw new ValidationError('Invalid request', {
@@ -57,11 +58,12 @@ export async function POST(request: NextRequest) {
       });
     }
     
-    // Ensure URL has protocol
-    let normalizedUrl = url.trim();
-    if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
-      normalizedUrl = `https://${normalizedUrl}`;
-    }
+    const normalizedUrl = normalizeUrlForJobKey(url);
+
+    // Determine jobId (latest-per-url rule)
+    const { jobId } = incomingJobId 
+      ? { jobId: incomingJobId }
+      : await getOrCreateJobIdForWorkflow(normalizedUrl, 'brand_analyses');
 
     // Track usage (1 credit for scraping)
     try {
@@ -77,6 +79,7 @@ export async function POST(request: NextRequest) {
 
     // 1) Scrape company info
     const company = await scrapeCompanyInfo(normalizedUrl, maxAge);
+    (company as any).jobId = jobId;
 
     // 2) Determine competitors from scraped data (names array) if present
     const scrapedCompetitors: string[] = Array.isArray(company?.scrapedData?.competitors)
@@ -93,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Return company and prompts together so UI can display prompts after Continue to Analysis
-    return NextResponse.json({ company, prompts });
+    return NextResponse.json({ company, prompts, jobId });
   } catch (error) {
     return handleApiError(error);
   }

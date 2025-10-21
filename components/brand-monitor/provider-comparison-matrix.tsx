@@ -131,8 +131,8 @@ export function ProviderComparisonMatrix({ data, brandName, competitors }: Provi
   const getBackgroundStyle = (score: number) => {
     const opacity = Math.pow(score / 100, 0.5);
     return {
-      backgroundColor: `rgba(251, 146, 60, ${opacity})`,
-      border: score > 0 ? '1px solid rgb(251, 146, 60)' : undefined
+      backgroundColor: `rgba(137, 207, 240, ${opacity})`,
+      border: score > 0 ? '1px solid rgb(137, 207, 240)' : undefined
     };
   };
 

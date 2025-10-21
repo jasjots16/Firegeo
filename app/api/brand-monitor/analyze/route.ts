@@ -79,13 +79,18 @@ export async function POST(request: NextRequest) {
       throw new ExternalServiceError('Unable to process credit deduction. Please try again', 'autumn');
     }
 
-    const { company, prompts: customPrompts, competitors: userSelectedCompetitors, useWebSearch = false } = await request.json();
+    const { company, prompts: customPrompts, competitors: userSelectedCompetitors, useWebSearch = false, jobId: incomingJobId } = await request.json();
 
     if (!company || !company.name) {
       throw new ValidationError(ERROR_MESSAGES.COMPANY_INFO_REQUIRED, {
         company: 'Company name is required'
       });
     }
+
+    // Resolve jobId using latest-per-url rule
+    const { getOrCreateJobIdForWorkflow, normalizeUrlForJobKey } = await import('@/lib/db/job-utils');
+    const normalizedUrl = normalizeUrlForJobKey(company.url || '');
+    const { jobId } = incomingJobId ? { jobId: incomingJobId } : await getOrCreateJobIdForWorkflow(normalizedUrl, 'brand_analyses');
 
     // Track usage with Autumn (deduct credits)
     try {
@@ -126,13 +131,14 @@ export async function POST(request: NextRequest) {
     // Start the async processing
     (async () => {
       try {
-        // Send initial credit info
+        // Send initial credit info + jobId
         await sendEvent({
           type: 'credits',
           stage: 'credits',
           data: {
             remainingCredits,
-            creditsUsed: CREDITS_PER_BRAND_ANALYSIS
+            creditsUsed: CREDITS_PER_BRAND_ANALYSIS,
+            jobId
           },
           timestamp: new Date()
         });
@@ -143,7 +149,8 @@ export async function POST(request: NextRequest) {
           customPrompts,
           userSelectedCompetitors,
           useWebSearch,
-          sendEvent
+          sendEvent,
+          jobId,
         });
 
         // Send final complete event with all data
@@ -151,7 +158,8 @@ export async function POST(request: NextRequest) {
           type: 'complete',
           stage: 'finalizing',
           data: {
-            analysis: analysisResult
+            analysis: analysisResult,
+            jobId,
           },
           timestamp: new Date()
         });
