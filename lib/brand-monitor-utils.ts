@@ -239,7 +239,7 @@
 // }
 
 import { Company } from './types';
-
+import { AI_COMPETITOR_DETECTION_PROMPT } from '@/prompts';
 export function validateUrl(url: string): boolean {
     try {
         const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
@@ -429,21 +429,10 @@ Description: ${company.description || 'Not provided'}
 Website Content: ${company.scrapedData?.mainContent?.substring(0, 1000) || 'Not available'}
 `.trim();
 
-        const prompt = `Based on the following company information, identify 6-8 direct competitors in the same industry/market segment. 
-
-${companyContext}
-
-Requirements:
-- Focus on DIRECT competitors offering similar products/services to the same target market
-- Include well-known industry leaders and emerging players
-- Provide the most common/official domain for each competitor (e.g., "shopify.com", not full URLs)
-- Be specific and relevant to this exact business, not generic industry players
-
-Return ONLY a JSON array in this exact format with no additional text:
-[
-  {"name": "Competitor Name", "url": "domain.com"},
-  {"name": "Another Competitor", "url": "example.com"}
-]`;
+        const prompt = AI_COMPETITOR_DETECTION_PROMPT({
+            companyName: company.name,
+            companyContext: companyContext
+        });
 
         // Example for OpenAI - adjust based on your AI provider
         const response = await aiClient.chat.completions.create({

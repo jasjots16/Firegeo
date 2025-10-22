@@ -57,12 +57,12 @@ const execWithInput = (command, args = [], input = 'y\n') => {
 async function checkPrerequisites() {
   // Check .env.local
   if (!fs.existsSync('.env.local')) {
-    if (fs.existsSync('.env.example')) {
-      fs.copyFileSync('.env.example', '.env.local');
+    if (fs.existsSync('.env.local')) {
+      fs.copyFileSync('.env.local', '.env.local');
       log.error('Created .env.local - Please update DATABASE_URL and run setup again');
       process.exit(1);
     }
-    throw new Error('.env.example not found');
+    throw new Error('.env.local not found');
   }
 
   // Check DATABASE_URL

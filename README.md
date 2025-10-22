@@ -50,7 +50,7 @@ The application now uses a beautiful blue gradient color scheme:
 ```bash
 cd backend
 npm install
-cp .env.example .env.local
+cp .env.local .env.local
 # Edit .env.local with your configuration
 npm run db:push
 npm run dev
@@ -61,7 +61,7 @@ npm run dev
 ```bash
 cd frontend
 npm install
-cp .env.example .env.local
+cp .env.local .env.local
 # Edit .env.local with your configuration
 npm run dev
 ```

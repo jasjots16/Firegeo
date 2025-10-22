@@ -4,6 +4,8 @@ import { Company, BrandPrompt, AIResponse, CompanyRanking, CompetitorRanking, Pr
 import { getProviderModel, normalizeProviderName, isProviderConfigured, getConfiguredProviders, PROVIDER_CONFIGS } from './provider-config';
 import { detectBrandMention, detectMultipleBrands, BrandDetectionOptions } from './brand-detection-utils';
 import { getBrandDetectionOptions } from './brand-detection-config';
+import { COMPETITOR_IDENTIFICATION_PROMPT } from '@/prompts';
+import { PROMPT_GENERATION_SYSTEM_PROMPT } from '@/prompts';
 
 const RankingSchema = z.object({
   rankings: z.array(z.object({
@@ -67,32 +69,14 @@ export async function identifyCompetitors(company: Company, progressCallback?: P
     if (!model) {
       throw new Error(`${provider.name} model not available`);
     }
-    
-    const prompt = `Identify 6-9 real, established competitors of ${company.name} in the ${company.industry} industry.
 
-Company: ${company.name}
-Industry: ${company.industry}
-Description: ${company.description}
-${company.scrapedData?.keywords ? `Keywords: ${company.scrapedData.keywords.join(', ')}` : ''}
-${company.scrapedData?.competitors ? `Known competitors: ${company.scrapedData.competitors.join(', ')}` : ''}
-
-Based on this company's specific business model and target market, identify ONLY direct competitors that:
-1. Offer the SAME type of products/services (not just retailers that sell them)
-2. Target the SAME customer segment
-3. Have a SIMILAR business model (e.g., if it's a DTC brand, find other DTC brands)
-4. Actually compete for the same customers
-
-For example:
-- If it's a DTC underwear brand, find OTHER DTC underwear brands (not department stores)
-- If it's a web scraping API, find OTHER web scraping APIs (not general data tools)
-- If it's an AI model provider, find OTHER AI model providers (not AI applications)
-
-IMPORTANT: 
-- Only include companies you are confident actually exist
-- Focus on TRUE competitors with similar offerings
-- Exclude retailers, marketplaces, or aggregators unless the company itself is one
-- Aim for 6-9 competitors total
-- Do NOT include general retailers or platforms that just sell/distribute products`;
+      const prompt = COMPETITOR_IDENTIFICATION_PROMPT({
+          companyName: company.name,
+          industry: company.industry,
+          description: company.description,
+          keywords: company.scrapedData?.keywords?.join(', '),
+          knownCompetitors: company.scrapedData?.competitors?.join(', ')
+      });
 
     const { object } = await generateObject({
       model,
@@ -242,36 +226,15 @@ export async function generatePromptsForCompany(
 
 
   // --- System prompt for AI-based prompt generation ---
-  const systemPrompt = `
-You are a marketing prompt generator that creates AEO (AI Engine Optimization) 
-and GEO (Generative Engine Optimization) prompts for brands.
 
-Given a company's data, generate natural search-style queries that people 
-might use to find or compare this brand in 2025.
-
-Create 3 prompts for each of these categories:
-- ranking
-- comparison
-- alternatives
-- recommendations
-
-Rules:
-- DO NOT USE THE NAME OF THE BRAND IN THE PROMPTS YOU WILL BE GENERATING
-- Focus on the company's main products, industry, keywords, and competitors
-- Make prompts relevant to the brand's specific market and offerings
-- Use natural language people would actually search for
-- Avoid generic terms like "best company" or "top brand"
-- Do not compare competitors against each other, only against the brand
-- Do not compare the products or services of competitors against each other
-
-Company Info:
-Name: ${brandName}
-Industry: ${industry}
-Main Products: ${mainProducts.join(", ")}
-Keywords: ${keywords.join(", ")}
-Description: ${description}
-Competitors: ${competitors.join(", ")}
-`;
+const systemPrompt = PROMPT_GENERATION_SYSTEM_PROMPT({
+  brandName,
+  industry,
+  mainProducts: mainProducts.join(", "),
+  keywords: keywords.join(", "),
+  description,
+  competitors: competitors.join(", ")
+});
 
   // --- Call the AI model ---
   
