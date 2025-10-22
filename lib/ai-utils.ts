@@ -261,6 +261,8 @@ Rules:
 - Make prompts relevant to the brand's specific market and offerings
 - Use natural language people would actually search for
 - Avoid generic terms like "best company" or "top brand"
+- Pick the quality of the products and compare that to market leaders
+- Ensure prompts are diverse and cover different angles
 
 Company Info:
 Name: ${brandName}

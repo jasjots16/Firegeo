@@ -16,6 +16,7 @@ import { CompetitorBenchmarks } from '@/components/dashboard/CompetitorBenchmark
 import { TopSources } from '@/components/dashboard/TopSources';
 import { useDashboardData } from '@/hooks/dashboard/useDashboardData';
 import Image from "next/image";
+import { PromptsResponsesPanel } from '@/components/dashboard/PromptsResponsesPanel';
 
 export default function DashboardPage() {
   const { data, maxBar } = useDashboardData();
@@ -76,6 +77,12 @@ export default function DashboardPage() {
             <div className="lg:col-span-1">
               <CompetitorBenchmarks rows={data.competitors} onCompare={onCompare} />
             </div>
+          </div>
+
+          {/* Prompts & Responses - bottom panel */}
+          <div className="mt-6">
+            {/* Temporary: using hardcoded demo content per request */}
+            <PromptsResponsesPanel />
           </div>
         </div>
       </main>
